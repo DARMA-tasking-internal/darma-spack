@@ -30,7 +30,7 @@ spack install darma-threads
 ````
 
 To install the DARMA on-node runtime (best for starting and exploring).
-Note, DARMA requires C++14 support. As such, we require GCC >= 4, Clang >= 3.6,
+Note, DARMA requires C++14 support. As such, we require GCC >= 5, Clang >= 3.6,
 and ICC >= 18. There, we recommand installing wiith
 
 ````
