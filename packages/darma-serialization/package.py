@@ -25,23 +25,22 @@
 
 from spack import *
 
-class DarmaThreads(CMakePackage):
-    """A backend runtime baesd on std::threads supporting the DARMA data effects
-       programming model
+class DarmaSerialization(CMakePackage):
+    """A serialization library for migrating data between processes
+       in DARMA programs
     """
 
     homepage = "https://github.com/DARMA-tasking"
-    url      = "https://github.com/DARMA-tasking/darma-simple-backend"
+    url      = "https://github.com/DARMA-tasking/darma-serialization"
 
-    version('0.6',
-        git='https://github.com/DARMA-tasking/darma-simple-backend',
-        branch='master')
+    version('1.0',
+        git='https://github.com/DARMA-tasking/darma-serialization',
+        branch='devel')
 
-    #version('0.6', '23a165069f260931e117d804f9efe41b1ebfe854')
-
-    depends_on('darma-frontend@0.6')
+    depends_on('darma-utility@1.0')
 
     def cmake_args(self):
+      import os
       spec = self.spec
       if self.compiler.name == "clang":
         if self.compiler.version < Version("3.6"):
@@ -51,8 +50,10 @@ class DarmaThreads(CMakePackage):
           raise Exception("DARMA requires GCC version >= 5")
       else:
         raise Exception("Incompatible compiler: need GCC >= 5, Clang >= 3.9")
+
+      utilityPath=os.path.join(spec['darma-utility'].prefix, "cmake")
       args = [
-        '-DDARMA_ROOT=%s' % spec['darma-frontend'].prefix
+        '-DDarmaUtility_DIR=%s' % utilityPath
       ]
       return args
 

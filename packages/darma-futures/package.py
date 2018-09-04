@@ -25,34 +25,40 @@
 
 from spack import *
 
-class DarmaFrontend(CMakePackage):
-  """A header library implementing the DARMA data effects
-     programming model.  This should be coupled to one of 
-     the backends for development and testing
-  """
+class DarmaFutures(CMakePackage):
+    """A serialization library for migrating data between processes
+       in DARMA programs
+    """
 
-  homepage = "https://github.com/DARMA-tasking"
-  url      = "https://github.com/DARMA-tasking/darma-frontend"
+    homepage = "https://github.com/DARMA-tasking"
+    url      = "https://github.com/DARMA-tasking/darma-futures"
 
-
-  version('0.6',
-        git='https://github.com/DARMA-tasking/darma-frontend',
+    version('1.0',
+        git='https://github.com/DARMA-tasking/darma-futures',
         branch='master')
 
-  #version('0.6.0', 'b7086e97c4e8f72fd8619082865909f10d3d3bd1')
+    depends_on('darma-serialization@1.0')
+    #depends_on('mpi')
 
-  # No dependencies header-only library
-  # depends_on()
+    def cmake_args(self):
+      import os
+      spec = self.spec
+      if self.compiler.name == "clang":
+        if self.compiler.version < Version("3.6"):
+          raise Exception("DARMA requires Clang version >= 3.6")
+      elif self.compiler.name == "gcc":
+        if self.compiler.version < Version("5"):
+          raise Exception("DARMA requires GCC version >= 5")
+      else:
+        raise Exception("Incompatible compiler: need GCC >= 5, Clang >= 3.9")
 
-  def cmake_args(self):
-    if self.compiler.name == "clang":
-      if self.compiler.version < Version("3.6"):
-        raise Exception("DARMA requires Clang version >= 3.6")
-    elif self.compiler.name == "gcc":
-      if self.compiler.version < Version("5"):
-        raise Exception("DARMA requires GCC version >= 5")
-    else:
-      raise Exception("Incompatible compiler: need GCC >= 5, Clang >= 3.9")
-    spec = self.spec
-    return []
+      utilityPath=os.path.join(spec['darma-serialization'].prefix, "cmake")
+
+      args = [
+        '-DDarmaSerialization_DIR=%s' % utilityPath,
+      #  '-DCMAKE_C_COMPILER=%s' % spec['mpi'].mpicc,
+      #  '-DCMAKE_CXX_COMPILER=%s' % spec['mpi'].mpicxx,
+      ]
+      return args
+
 

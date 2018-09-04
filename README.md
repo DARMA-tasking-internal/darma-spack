@@ -26,16 +26,13 @@ spack repo add ${path_to_repo}
 Once Spack has been made aware of the DARMA spack packages, you can run:
 
 ````
-spack install darma-threads
+spack install darma-futures
 ````
 
-To install the DARMA on-node runtime (best for starting and exploring).
+To install the DARMA futures header library and MPI backend.
 Note, DARMA requires C++14 support. As such, we require GCC >= 5, Clang >= 3.6,
-and ICC >= 18. There, we recommand installing wiith
+and ICC >= 18. Once installed, DARMA applications can build against the installed CMake package. 
 
-````
-spack install darma-threads %clang@3.9
-````
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
